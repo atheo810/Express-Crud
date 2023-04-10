@@ -1,5 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const schema = require("../validator/validator");
+const bcrypt = require("bcrypt");
 const prisma = new PrismaClient();
 
 class userController {
@@ -19,9 +20,12 @@ class userController {
   static async createUser(req, res) {
     try {
       const checklistjoi = await schema.validateAsync(req.body);
+      const salt = await bcrypt.genSalt(10);
       const result = await prisma.User.create({
         data: {
-          ...checklistjoi,
+          name: checklistjoi.name,
+          email: checklistjoi.email,
+          password: bcrypt.hashSync(checklistjoi.password, salt),
         },
       });
       if (!result) {
@@ -47,12 +51,15 @@ class userController {
   static async updateUser(req, res) {
     try {
       const checklistjoi = await schema.validateAsync(req.body);
+      const salt = await bcrypt.genSalt(10);
       const result = await prisma.User.update({
         where: {
           id: parseInt(req.params.id),
         },
         data: {
-          ...checklistjoi,
+          name: checklistjoi.name,
+          email: checklistjoi.email,
+          password: bcrypt.hashSync(checklistjoi.password, salt),
         },
       });
       if (!result) {
