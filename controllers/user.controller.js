@@ -5,9 +5,13 @@ class userController {
   static async getAllUsers(req, res) {
     try {
       const result = await prisma.User.findMany({});
+      if (!result) {
+      }
       res.status(200).json(result);
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res
+        .status(500)
+        .json({ error: `${error.message} tidak ada data saat ini` });
     }
   }
   static async createUser(req, res) {
@@ -19,6 +23,9 @@ class userController {
           password: req.body.password,
         },
       });
+      if (!result) {
+        res.status(400).json({ error: "User tidak dapat dibuat" });
+      }
       res.status(201).json(result);
     } catch (error) {
       res.status(500).json({ error: error.message });
@@ -48,6 +55,11 @@ class userController {
           password: req.body.password,
         },
       });
+      if (!result) {
+        res
+          .status(404)
+          .json({ error: "User tidak ditemukan dan tidak dapat dibuat" });
+      }
       res.status(200).json(result);
     } catch (error) {
       res.status(500).json({ error: error.message });
