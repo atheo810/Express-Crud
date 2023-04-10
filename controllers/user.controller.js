@@ -46,14 +46,13 @@ class userController {
   }
   static async updateUser(req, res) {
     try {
+      const checklistjoi = await schema.validateAsync(req.body);
       const result = await prisma.User.update({
         where: {
           id: parseInt(req.params.id),
         },
         data: {
-          name: req.body.name,
-          email: req.body.email,
-          password: req.body.password,
+          ...checklistjoi,
         },
       });
       if (!result) {
