@@ -1,9 +1,11 @@
 const { PrismaClient } = require("@prisma/client");
+const schema = require("../validator/validator");
 const prisma = new PrismaClient();
 
 class userController {
   static async getAllUsers(req, res) {
     try {
+      const checklistjoi = schema.validateAsync(req.body);
       const result = await prisma.User.findMany({});
       if (!result) {
       }
@@ -16,11 +18,10 @@ class userController {
   }
   static async createUser(req, res) {
     try {
+      const checklistjoi = await schema.validateAsync(req.body);
       const result = await prisma.User.create({
         data: {
-          name: req.body.name,
-          email: req.body.email,
-          password: req.body.password,
+          ...checklistjoi,
         },
       });
       if (!result) {
