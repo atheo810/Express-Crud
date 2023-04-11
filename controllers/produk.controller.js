@@ -93,4 +93,5 @@ class produkController {
   }
 }
 
+// melakukan eksport dari class ProdukController
 module.exports = produkController;
