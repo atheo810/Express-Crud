@@ -1,5 +1,6 @@
 const { Router } = require("express");
 const userRouter = require("../routers/user.router");
+const produkRouter = require("../routers/product.router");
 const router = Router();
 
 router.get("/", (req, res) => {
@@ -7,5 +8,6 @@ router.get("/", (req, res) => {
 });
 
 router.use(userRouter);
+router.use(produkRouter);
 
 module.exports = router;
